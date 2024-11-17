@@ -142,7 +142,7 @@ Video URL：
 4. 鼠标点中得分，得分规则按色彩、大小、速度不同计算，得分规则设定与飞碟点击判定如下：
 
 ```cs
-  // ScoreController
+  // ScoreController -> 得分规则设定
   Dictionary<Color, float> colorDict = new Dictionary<Color, float>() {
       { Color.green, 0.5f},
       { Color.red, 1f},
@@ -165,7 +165,7 @@ Video URL：
       score += Rounding(colorDict[diskData.color] + (1.1f - diskData.size) * 4 + (diskData.speed - 14f) * 0.3f);
   }
 
-  // RoundController
+  // RoundController -> 飞碟点击判定
   void Update()
   {
       ...
