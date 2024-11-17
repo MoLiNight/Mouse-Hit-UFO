@@ -267,9 +267,9 @@ public override void Start()
   public class DiskFactory : MonoBehaviour
   {
       private static DiskFactory _instance;
-      
-      private List<DiskData> used;
-      private List<DiskData> free;
+  
+      private List<DiskData> used = new List<DiskData>();
+      private List<DiskData> free = new List<DiskData>();
   
       public static DiskFactory GetInstance()
       {
@@ -279,7 +279,7 @@ public override void Start()
           }
           return _instance;
       }
-
+  
       public GameObject CreateDisk(int round, DiskData diskData, int stage)
       {
           GameObject disk;
@@ -297,32 +297,43 @@ public override void Start()
               disk.GetComponent<DiskData>().RandomDiskData(round);
               diskData = disk.GetComponent<DiskData>();
           }
+
+          used.Add(diskData);  // add the diskData to the cache
+
           // Instantiate disk size
           disk.transform.localScale = new Vector3(2, 0.15f, 2) * diskData.size;
           // Instantiate disk color
           Renderer renderer = disk.GetComponent<Renderer>();
           renderer.material.color = diskData.color;
-          
+  
           return disk;
       }
+
+      // Called when the round is changed
+      public void Reset()
+      {
+          used.Clear();
+          free.Clear();
+      }
   
-      // stage = 0 -> Disk
-      // stage = 1 -> NoGravityDisk
+      // stage = 0 -> Physis，Disk
+      // stage = 1 -> CCAction，NoGravityDisk
       public GameObject GetDisk(int round, int stage)
       {
           DiskData diskData = null;
-          if (free != null)
+          if (free.Count > 0)
           {
               diskData = free[Random.Range(0, free.Count)];
-              used.Add(diskData);
               free.Remove(diskData);
           }
           return CreateDisk(round, diskData, stage);
       }
   
+      // Called in SSActionEvent()
       public void FreeDisk(GameObject disk)
       {
           DiskData diskData = disk.GetComponent<DiskData>();
+          Destroy(disk);
           free.Add(diskData);
           used.Remove(diskData);
       }
