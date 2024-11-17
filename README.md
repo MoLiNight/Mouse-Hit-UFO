@@ -213,11 +213,17 @@ Video URL：
 
 ## 三、游戏实现
 
-1. 该游戏的项目结构，游戏对象与场景效果如下图所示： 
+1. 该游戏的项目结构，场景效果，游戏对象及其挂载的组件详情如下图所示： 
 
 ![Image](./word/media/image1.png)
 
 ![Image](./word/media/image2.png)
 
 ![Image](./word/media/image3.png)
+
+由此可知，在运动学模式中，飞碟 (Disk) 使用了刚体部件；
+
+同时，地面 (Plane) 使用了 "Finish" Tag，与地面 (Plane) 相关的代码已在上一部分的 飞碟点击判定 代码中给出；
+
+2. 飞碟运动逻辑与相关代码：
 
