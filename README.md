@@ -262,9 +262,6 @@ public override void Start()
 3. DiskFactory
 
 ```cs
-  using System.Collections.Generic;
-  using UnityEngine;
-  
   public class DiskFactory : MonoBehaviour
   {
       private static DiskFactory _instance;
@@ -280,15 +277,15 @@ public override void Start()
           }
           return _instance;
       }
-  
+
       public GameObject CreateDisk(int round, DiskData diskData, int stage)
       {
           GameObject disk;
-          if(stage == 0)
+          if(stage == 0)  // Physis
           {
               disk = GameObject.Instantiate(Resources.Load("Prefabs/Disk", typeof(GameObject))) as GameObject;
           }
-          else
+          else  // CCAction
           {
               disk = GameObject.Instantiate(Resources.Load("Prefabs/NoGravityDisk", typeof(GameObject))) as GameObject;
           }
@@ -331,12 +328,12 @@ public override void Start()
 ```
    
 4. ScoreController
-   
+
+ScoreController 仅涉及对 Model 的处理，而 RoundController 涉及对 Model、View 与 Controller 的处理；
+
+将 ScoreController 从 RoundController 中分离，使得该游戏的项目结构更加直观与易于维护；
+
 ```cs
-  using System.Collections.Generic;
-  using UnityEngine;
-  using UnityEngine.UI;
-  
   public class ScoreController : MonoBehaviour
   {
       private int score = 0;
