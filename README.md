@@ -208,6 +208,7 @@ Video URL：
 
 该游戏项目的 UML图 如下图所示：
 
+![Image](./word/media/Main.png)
 
 4. 使该飞碟游戏同时支持物理运动与运动学（变换）运动。
 
