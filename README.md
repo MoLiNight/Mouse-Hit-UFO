@@ -227,3 +227,144 @@ Video URL：
 
 2. 飞碟运动逻辑与相关代码：
 
+```cs
+// CCMoveToAction -> 物理模式飞碟运动
+public static CCMoveToAction GetSSAction(Vector3 target, float speed)
+{
+    CCMoveToAction action = ScriptableObject.CreateInstance<CCMoveToAction>();
+    action.target = target;
+    action.speed = speed;
+    return action;
+}
+
+public override void Update()
+{
+    this.transform.position = Vector3.MoveTowards(this.transform.position, target, speed * Time.deltaTime);
+    ...
+}
+
+// PhysicalAction -> 运动学模式飞碟运动
+public static PhysicalAction GetSSAction(Vector3 force)
+{
+    PhysicalAction action = ScriptableObject.CreateInstance<PhysicalAction>();
+    action.force = force;
+    return action;
+}
+
+public override void Start()
+{
+    Rigidbody rb = this.gameobject.GetComponent<Rigidbody>();
+    rb.AddForce(force.x, force.y, force.z, ForceMode.Impulse);
+}
+```
+由此可知，在运动学模式中，飞碟 (Disk) 可做弧线运动；
+
+3. DiskFactory
+
+```cs
+  using System.Collections.Generic;
+  using UnityEngine;
+  
+  public class DiskFactory : MonoBehaviour
+  {
+      private static DiskFactory _instance;
+      
+      private List<DiskData> used;
+      private List<DiskData> free;
+  
+      public static DiskFactory GetInstance()
+      {
+          if (_instance == null)
+          {
+              _instance = new DiskFactory();
+          }
+          return _instance;
+      }
+  
+      public GameObject CreateDisk(int round, DiskData diskData, int stage)
+      {
+          GameObject disk;
+          if(stage == 0)
+          {
+              disk = GameObject.Instantiate(Resources.Load("Prefabs/Disk", typeof(GameObject))) as GameObject;
+          }
+          else
+          {
+              disk = GameObject.Instantiate(Resources.Load("Prefabs/NoGravityDisk", typeof(GameObject))) as GameObject;
+          }
+  
+          if (diskData == null)
+          {
+              disk.GetComponent<DiskData>().RandomDiskData(round);
+              diskData = disk.GetComponent<DiskData>();
+          }
+          // Instantiate disk size
+          disk.transform.localScale = new Vector3(2, 0.15f, 2) * diskData.size;
+          // Instantiate disk color
+          Renderer renderer = disk.GetComponent<Renderer>();
+          renderer.material.color = diskData.color;
+          
+          return disk;
+      }
+  
+      // stage = 0 -> Disk
+      // stage = 1 -> NoGravityDisk
+      public GameObject GetDisk(int round, int stage)
+      {
+          DiskData diskData = null;
+          if (free != null)
+          {
+              diskData = free[Random.Range(0, free.Count)];
+              used.Add(diskData);
+              free.Remove(diskData);
+          }
+          return CreateDisk(round, diskData, stage);
+      }
+  
+      public void FreeDisk(GameObject disk)
+      {
+          DiskData diskData = disk.GetComponent<DiskData>();
+          free.Add(diskData);
+          used.Remove(diskData);
+      }
+  }
+```
+   
+4. ScoreController
+   
+```cs
+  using System.Collections.Generic;
+  using UnityEngine;
+  using UnityEngine.UI;
+  
+  public class ScoreController : MonoBehaviour
+  {
+      private int score = 0;
+      Dictionary<Color, float> colorDict = new Dictionary<Color, float>() {
+          { Color.green, 0.5f},
+          { Color.red, 1f},
+          { Color.yellow, 1.5f}
+      };
+  
+      public int GetScore()
+      {
+          return score;
+      }
+  
+      public int Rounding(float number)
+      {
+          int results = (int)number;
+          if (number - results >= 0.5f)
+          {
+              results += 1;
+          }
+          return results;
+      }
+  
+      public void RecordDisk(GameObject disk)
+      {
+          DiskData diskData = disk.GetComponent<DiskData>();
+          score += Rounding(colorDict[diskData.color] + (1.1f - diskData.size) * 4 + (diskData.speed - 14f) * 0.3f);
+      }
+  }
+``
