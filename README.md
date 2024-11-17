@@ -329,10 +329,6 @@ public override void Start()
    
 4. ScoreController
 
-ScoreController 仅涉及对 Model 的处理，而 RoundController 涉及对 Model、View 与 Controller 的处理；
-
-将 ScoreController 从 RoundController 中分离，使得该游戏的项目结构更加直观与易于维护；
-
 ```cs
   public class ScoreController : MonoBehaviour
   {
@@ -365,3 +361,7 @@ ScoreController 仅涉及对 Model 的处理，而 RoundController 涉及对 Mod
       }
   }
 ``
+
+ScoreController 仅涉及对 Model 的处理，而 RoundController 涉及对 Model、View 与 Controller 的处理；
+
+将 ScoreController 的计分逻辑从 RoundController 的回合控制逻辑中分离，使得该游戏的项目结构更加直观且易于维护；
