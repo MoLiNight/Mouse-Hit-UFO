@@ -71,33 +71,9 @@ Video URL：
                   this.RunAction(disk, ccMoveToAction, this);
                   break;
               }
-          case 1:
-              {
-                  position = new Vector3(Random.Range(-throwAreaWidth, throwAreaWidth), -throwAreaHeight * 3);
-                  target = new Vector3(Random.Range(-throwAreaWidth, throwAreaWidth), throwAreaHeight * 3);
-                  disk.transform.position = position;
-                  CCMoveToAction ccMoveToAction = CCMoveToAction.GetSSAction(target, diskData.speed * 0.75f);
-                  this.RunAction(disk, ccMoveToAction, this);
-                  break;
-              }
-          case 2:
-              {
-                  position = new Vector3(-throwAreaWidth * 1.5f, Random.Range(-throwAreaHeight, throwAreaHeight));
-                  target = new Vector3(throwAreaWidth * 1.5f, Random.Range(-throwAreaHeight, throwAreaHeight));
-                  disk.transform.position = position;
-                  CCMoveToAction ccMoveToAction = CCMoveToAction.GetSSAction(target, diskData.speed * 0.75f);
-                  this.RunAction(disk, ccMoveToAction, this);
-                  break;
-              }
-          case 3:
-              {
-                  position = new Vector3(throwAreaWidth * 1.5f, Random.Range(-throwAreaHeight, throwAreaHeight));
-                  target = new Vector3(-throwAreaWidth * 1.5f, Random.Range(-throwAreaHeight, throwAreaHeight));
-                  disk.transform.position = position;
-                  CCMoveToAction ccMoveToAction = CCMoveToAction.GetSSAction(target, diskData.speed * 0.75f);
-                  this.RunAction(disk, ccMoveToAction, this);
-                  break;
-              }
+          case 1: ...
+          case 2: ...
+          case 3: ...
       }
   }
 
