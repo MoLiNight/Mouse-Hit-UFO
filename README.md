@@ -18,15 +18,11 @@ Video URL：
 
 游戏实现要求：
 
-1. 列出游戏中提及的事物（Objects）;
+1. 尽可能使用前面 MVC 结构实现人机交互与游戏模型分离；
+2. 使用带缓存的工厂模式管理不同飞碟的生产与回收，该工厂必须是场景单实例的；
+3. 按 adapter模式 设计图修改飞碟游戏；
 
-2. 用表格列出玩家动作表（规则表）;
-
-3. 尽可能使用前面 MVC 结构实现人机交互与游戏模型分离；
-4. 使用带缓存的工厂模式管理不同飞碟的生产与回收，该工厂必须是场景单实例的；
-5. 按 adapter模式 设计图修改飞碟游戏；
-
-6. 使该飞碟游戏同时支持物理运动与运动学（变换）运动。
+4. 使该飞碟游戏同时支持物理运动与运动学（变换）运动。
 
 ## 二、游戏设计 
 
@@ -143,7 +139,7 @@ Video URL：
   }
 ```
 
-4. 鼠标点中得分，得分规则按色彩、大小、速度不同计算，得分规则设定如下：
+4. 鼠标点中得分，得分规则按色彩、大小、速度不同计算，得分规则设定与飞碟点击判定如下：
 
 ```cs
   // ScoreController
@@ -168,23 +164,56 @@ Video URL：
       DiskData diskData = disk.GetComponent<DiskData>();
       score += Rounding(colorDict[diskData.color] + (1.1f - diskData.size) * 4 + (diskData.speed - 14f) * 0.3f);
   }
+
+  // RoundController
+  void Update()
+  {
+      ...
+      if (Input.GetMouseButtonDown(0))  // 0 for left-click
+      {
+          // Creates a ray that emits from the camera to the location of the mouse pointer
+          Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+          RaycastHit hit;
+      
+          // Detect the collision of the ray with an object in the scene
+          if (Physics.Raycast(ray, out hit))
+          {
+              // Check if the colliding object is the current object
+              if (hit.collider != null)
+              {
+                  if (hit.collider.gameObject.tag.Contains("Disk"))
+                  {
+                      Debug.Log("Hit UFO!");
+                      this.scoreController.RecordDisk(hit.collider.gameObject);
+                      hit.collider.gameObject.SetActive(false);
+                      ScoreText.text = "Scores: " + scoreController.GetScore().ToString();
+                  }
+                  if (hit.collider.gameObject.tag.Contains("Finish"))
+                  {
+                      Debug.Log("Game Over!");
+                      game_quit = true;
+                      GameOverTip.SetActive(true);
+                  }
+              }
+          }
+      }
+  }
 ```
 
 游戏实现设计：
 
-1. 列出游戏中提及的事物（Objects）;
+1. 尽可能使用前面 MVC 结构实现人机交互与游戏模型分离；
+2. 使用带缓存的工厂模式管理不同飞碟的生产与回收，该工厂必须是场景单实例的；
+3. 按 adapter模式 设计图修改飞碟游戏；
 
-2. 用表格列出玩家动作表（规则表）;
+该游戏项目的 UML图 如下图所示：
+![Image](./word/media/Main.png)
 
-3. 尽可能使用前面 MVC 结构实现人机交互与游戏模型分离；
-4. 使用带缓存的工厂模式管理不同飞碟的生产与回收，该工厂必须是场景单实例的；
-5. 按 adapter模式 设计图修改飞碟游戏；
-
-6. 使该飞碟游戏同时支持物理运动与运动学（变换）运动。
+4. 使该飞碟游戏同时支持物理运动与运动学（变换）运动。
 
 ## 三、游戏实现
 
-该游戏的项目结构，游戏对象与场景效果如下图所示： 
+1. 该游戏的项目结构，游戏对象与场景效果如下图所示： 
 
 ![Image](./word/media/image1.png)
 
@@ -192,4 +221,3 @@ Video URL：
 
 ![Image](./word/media/image3.png)
 
-![Image](./word/media/Main.png)
