@@ -360,7 +360,7 @@ public override void Start()
           score += Rounding(colorDict[diskData.color] + (1.1f - diskData.size) * 4 + (diskData.speed - 14f) * 0.3f);
       }
   }
-``
+```
 
 ScoreController 仅涉及对 Model 的处理，而 RoundController 涉及对 Model、View 与 Controller 的处理；
 
