@@ -37,7 +37,7 @@ Video URL：
 2. 每个 trial 的飞碟的色彩、大小、发射位置、速度、角度、同时出现的个数都可能不同;
 3. 每个 trial 的飞碟有随机性，总体难度随 round 上升;
 
-```python
+```cs
   // DiskData -> 飞碟的色彩、大小、速度不同
   public List<Color> colors = new List<Color>() { Color.green, Color.red, Color.yellow };
 
@@ -169,7 +169,7 @@ Video URL：
 
 4. 鼠标点中得分，得分规则按色彩、大小、速度不同计算，得分规则设定如下：
 
-```python
+```cs
   // ScoreController
   Dictionary<Color, float> colorDict = new Dictionary<Color, float>() {
       { Color.green, 0.5f},
